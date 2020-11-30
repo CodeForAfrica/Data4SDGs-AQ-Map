@@ -1,5 +1,6 @@
 // copy empty robots.txt
 import '../robots.txt';
+import '../CNAME';
 
 // copy favicons
 import '../favicons/android-chrome-144x144.png';

@@ -55,7 +55,15 @@ module.exports = {
 			{
 				test: /\.(txt)$/i, 
 				loader: "file-loader?name=/[name].[ext]"
-			}
+			},
+			{
+				test: /CNAME$/,
+				use: [
+				  {
+					loader: 'file-loader?name=/[name]',
+				  },
+				],
+			  },
 		]
 	},
 
