@@ -118,6 +118,7 @@ let api = {
 	now returns data from last 5 minutes, so we group all data by sensorId
 	 and compute a mean to get distinct values per sensor */
   getData: async function (URL, num) {
+    const token = process.env.ACCESS_TOKEN;
     function getRightValue(array, type) {
       let value;
       array.forEach(function (item) {
@@ -128,7 +129,11 @@ let api = {
       return value;
     }
 
-    return fetch(URL)
+    return fetch(URL, {
+      headers: {
+        Authorization: `token ${token}`,
+      },
+    })
       .then((resp) => resp.json())
       .then((json) => {
         console.log("successful retrieved data");
