@@ -616,7 +616,7 @@ function sensorNr(data) {
 		} else if (data === 22) {
 			return "OpenAQ"
 		} else {
-			return "SensorsAPI"
+			return "sensors.AFRICA"
 		}
 	}
 
