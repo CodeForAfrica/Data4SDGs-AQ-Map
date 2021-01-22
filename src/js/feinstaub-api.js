@@ -110,7 +110,7 @@ let api = {
 
 		const P1 = aqius(data.PM10, 'PM10');
 		const P2 = aqius(data.PM25, 'PM25');
-		return (P1 >= P2) ? {"AQI": P1, "origin": "PM10"} : {"AQI": P2, "origin": "PM2.5"};
+		return (P1 >= P2) ? { "AQI": P1, "origin": "PM10" } : { "AQI": P2, "origin": "PM2.5" };
 	},
 
 	/* fetches from /now, ignores non-finedust sensors
@@ -135,46 +135,50 @@ let api = {
 				let timestamp_data = '';
 				if (num === 1) {
 					let cells = _.chain(json)
-					.filter(node => node.node_moved === false)
+						.filter(node => node.node_moved === false)
 						.map((values) => {
 							if (values.last_data_received_at > timestamp_data)
-	                timestamp_data = values.last_data_received_at;
-	              const id = () => {
-	                const stat = values.stats.find(
-	                  s => ["P1", "P2"].indexOf(s.value_type) !== -1
-	                );
-	                return stat ? Number(stat.sensor_id) : undefined;
-	              };
-	              const lat = Number(values.location.latitude);
-	              const long = Number(values.location.longitude);
-	              const date = new Date(values.last_data_received_at);
-	              const P1 = values.stats.find(s => s.value_type === "P1");
-	              const P2 = values.stats.find(s => s.value_type === "P2");
-								return {
-	                "latitude": lat,
-	                "longitude": long,
-	                "id":id(),
-	                "date": date.toLocaleDateString(),
-	                "data": {
-	                  "PM10": P1 ? P1.average.toFixed(0) : 0,
-	                  "PM25": P2 ? P2.average.toFixed(0) : 0
-	                },
-									"indoor": values.location.indoor,
-	              };
+								timestamp_data = values.last_data_received_at;
+							const id = () => {
+								const stat = values.stats.find(
+									s => ["P1", "P2"].indexOf(s.value_type) !== -1
+								);
+								return stat ? Number(stat.sensor_id) : undefined;
+							};
+							console.log(values.node.owner)
+							const network = Number(values.node.owner);
+							const lat = Number(values.location.latitude);
+							const long = Number(values.location.longitude);
+							const date = new Date(values.last_data_received_at);
+							const P1 = values.stats.find(s => s.value_type === "P1");
+							const P2 = values.stats.find(s => s.value_type === "P2");
+							return {
+								"latitude": lat,
+								"longitude": long,
+								"id": id(),
+								"network": network,
+								"date": date.toLocaleDateString(),
+								"data": {
+									"PM10": P1 ? P1.average.toFixed(0) : 0,
+									"PM25": P2 ? P2.average.toFixed(0) : 0
+								},
+								"indoor": values.location.indoor,
+							};
 						})
 						.value();
-					return Promise.resolve({cells: cells, timestamp: timestamp_data});
+					return Promise.resolve({ cells: cells, timestamp: timestamp_data });
 				} else if (num === 2) {
 					let cells = _.chain(json)
 						.filter(node => node.node_moved === false)
 						.map((values) => {
 							if (values.last_data_received_at > timestamp_data) timestamp_data = values.last_data_received_at;
 							const id = () => {
-                const stat = values.stats.find(
-                  s => ["P1", "P2"].indexOf(s.value_type) !== -1
-                );
-                return stat ? Number(stat.sensor_id) : undefined;
-              };
+								const stat = values.stats.find(
+									s => ["P1", "P2"].indexOf(s.value_type) !== -1
+								);
+								return stat ? Number(stat.sensor_id) : undefined;
+							};
+							const network = Number(values.node.owner);
 							const date = new Date(values.last_data_received_at);
 							const P1 = values.stats.find(s => s.value_type === "P1");
 							const P2 = values.stats.find(s => s.value_type === "P2");
@@ -192,6 +196,7 @@ let api = {
 									"PM25_24h": data_in.PM25
 								},
 								"id": id(),
+								"network": network,
 								"date": date.toLocaleDateString(),
 								"latitude": values.location.latitude,
 								"longitude": values.location.longitude,
@@ -202,39 +207,41 @@ let api = {
 							return (api.checkValues(values.data.Official_AQI_US, "Official_AQI_US"));
 						})
 						.value();
-					return Promise.resolve({cells: cells, timestamp: timestamp_data});
+					return Promise.resolve({ cells: cells, timestamp: timestamp_data });
 				} else if (num === 3) {
-				 let cells = _.chain(json)
-					 .filter(node => node.node_moved === false)
-					 .map((values) => {
-						 if (values.last_data_received_at > timestamp_data) timestamp_data = values.last_data_received_at;
-						 const id = () => {
-							 const stat = values.stats.find(
-								 s => ["humidity", "temperature"].indexOf(s.value_type) !== -1
-							 );
-							 return stat ? Number(stat.sensor_id) : undefined;
-						 };
-						 const lat = Number(values.location.latitude);
-						 const long = Number(values.location.longitude);
-						 const date = new Date(values.last_data_received_at);
-						 const humidity = values.stats.find(s => s.value_type === "humidity");
-						 const temperature = values.stats.find(s => s.value_type === "temperature");
-						 return {
-							 "latitude": lat,
-							 "longitude": long,
-							 "id": id(),
-							 "date": date.toLocaleDateString(),
-							 "data": {
-								 "Humidity": humidity ? Math.round(humidity.average)  : 0,
-								 "Temperature": temperature ? Math.round(temperature.average) : 0
-							 },
-							 "indoor": values.location.indoor,
-						 };
-					 })
-					 .value();
-				 return Promise.resolve({cells: cells, timestamp: timestamp_data});
-			 }
-			 {/*else if (num === 4) {
+					let cells = _.chain(json)
+						.filter(node => node.node_moved === false)
+						.map((values) => {
+							if (values.last_data_received_at > timestamp_data) timestamp_data = values.last_data_received_at;
+							const id = () => {
+								const stat = values.stats.find(
+									s => ["humidity", "temperature"].indexOf(s.value_type) !== -1
+								);
+								return stat ? Number(stat.sensor_id) : undefined;
+							};
+							const network = Number(values.node.owner);
+							const lat = Number(values.location.latitude);
+							const long = Number(values.location.longitude);
+							const date = new Date(values.last_data_received_at);
+							const humidity = values.stats.find(s => s.value_type === "humidity");
+							const temperature = values.stats.find(s => s.value_type === "temperature");
+							return {
+								"latitude": lat,
+								"longitude": long,
+								"id": id(),
+								"network": network,
+								"date": date.toLocaleDateString(),
+								"data": {
+									"Humidity": humidity ? Math.round(humidity.average) : 0,
+									"Temperature": temperature ? Math.round(temperature.average) : 0
+								},
+								"indoor": values.location.indoor,
+							};
+						})
+						.value();
+					return Promise.resolve({ cells: cells, timestamp: timestamp_data });
+				}
+				{/*else if (num === 4) {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.noise_sensors[sensor.sensor.sensor_type.name] != "undefined"
