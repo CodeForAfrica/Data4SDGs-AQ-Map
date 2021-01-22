@@ -7,12 +7,12 @@ import 'leaflet/dist/leaflet.css';
 import * as d3_Hexbin from "d3-hexbin";
 import * as d3_Selection from 'd3-selection';
 import * as d3_Transition from "d3-transition";
-import {scaleLinear} from 'd3-scale';
-import {geoPath, geoTransform} from 'd3-geo';
-import {timeMinute} from 'd3-time';
-import {interval, timeout} from 'd3-timer';
-import {timeFormatLocale, timeParse} from 'd3-time-format';
-import {median} from 'd3-array';
+import { scaleLinear } from 'd3-scale';
+import { geoPath, geoTransform } from 'd3-geo';
+import { timeMinute } from 'd3-time';
+import { interval, timeout } from 'd3-timer';
+import { timeFormatLocale, timeParse } from 'd3-time-format';
+import { median } from 'd3-array';
 
 const d3 = Object.assign({}, d3_Selection, d3_Hexbin);
 
@@ -102,7 +102,7 @@ const panelIDs = {
 
 const div = d3.select("#sidebar").append("div").attr("id", "table").style("display", "none");
 
-const map = L.map('map', {zoomControl: true, minZoom: config.minZoom, maxZoom: config.maxZoom, doubleClickZoom: false});
+const map = L.map('map', { zoomControl: true, minZoom: config.minZoom, maxZoom: config.maxZoom, doubleClickZoom: false });
 
 const tiles = L.tileLayer(config.tiles, {
 	attribution: config.attribution,
@@ -140,7 +140,7 @@ user_selected_value = config.selection;
 let coordsCenter = config.center;
 let zoomLevel = config.zoom;
 
- if (location.hash) {
+if (location.hash) {
 	// Coordinates are passed by hash path
 	// /#{zoom}/{lat}/{lng}
 	const hash_params = location.hash.split("/");
@@ -257,7 +257,7 @@ window.onload = function () {
 				this.stream.point(point.x, point.y);
 			};
 
-			this.projection.pathFromGeojson = geoPath().projection(geoTransform({point: this.projection._projectPoint}));
+			this.projection.pathFromGeojson = geoPath().projection(geoTransform({ point: this.projection._projectPoint }));
 
 			// Compatibility with v.1
 			this.projection.latLngToLayerFloatPoint = this.projection.latLngToLayerPoint;
@@ -273,7 +273,7 @@ window.onload = function () {
 			if (this._container != null) this._container.remove();
 
 			// Remove events
-			map.off({'moveend': this._redraw}, this);
+			map.off({ 'moveend': this._redraw }, this);
 			this._container = null;
 			this._map = null;
 
@@ -303,7 +303,7 @@ window.onload = function () {
 			this._enableLeafletRounding();
 		},
 		getEvents: function () {
-			return {zoomend: this._zoomChange};
+			return { zoomend: this._zoomChange };
 		},
 
 		_zoomChange: function () {
@@ -328,7 +328,7 @@ window.onload = function () {
 				let lng = this.options.lng(d);
 				let lat = this.options.lat(d);
 				let point = projection.latLngToLayerPoint([lat, lng]);
-				return {o: d, point: point};
+				return { o: d, point: point };
 			});
 
 			// Select the hex group for the current zoom level. This has
@@ -426,8 +426,8 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	custom_select.select("select").selectAll("option").each(function () {
 		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
 	});
-	custom_select.append("div").attr("class", "select-selected").html("<span>"+translate.tr(lang,
-		custom_select.select("select").select("option:checked").html())+"</span>").on("click", showAllSelect);
+	custom_select.append("div").attr("class", "select-selected").html("<span>" + translate.tr(lang,
+		custom_select.select("select").select("option:checked").html()) + "</span>").on("click", showAllSelect);
 	custom_select.style("display", "inline-block");
 
 	switchLegend(user_selected_value);
@@ -436,7 +436,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	map.clicked = 0;
 	hexagonheatmap = L.hexbinLayer(scale_options[user_selected_value]).addTo(map);
 
-//	REVOIR ORDRE DANS FONCTION READY
+	//	REVOIR ORDRE DANS FONCTION READY
 	function retrieveData() {
 		api.getData("https://api.sensors.africa/v2/nodes/?format=json", 1).then(function (result) {
 			hmhexaPM_aktuell = result.cells;
@@ -452,7 +452,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 				if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
 				ready(3);
 			});
-		{/*api.getData("https://api.sensors.africa/v2/nodes/?format=json", 4).then(function (result) {
+			{/*api.getData("https://api.sensors.africa/v2/nodes/?format=json", 4).then(function (result) {
 				hmhexa_noise = result.cells;
 				if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
 				ready(4);
@@ -475,11 +475,11 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	map.on('move', function () {
 	});
 
-//	REVOIR LE DOUBLECLIQUE
+	//	REVOIR LE DOUBLECLIQUE
 
 	map.on('click', function (e) {
 		/* if the user clicks anywhere outside the opened select drop down, then close all select boxes */
-		if (! d3.select("#custom-select").select(".select-items").empty()) {
+		if (!d3.select("#custom-select").select(".select-items").empty()) {
 			d3.select("#custom-select").select(".select-items").remove();
 			d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
 		} else {
@@ -499,13 +499,13 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 };
 
 function data_median(data) {
-	function sort_num(a,b) {
+	function sort_num(a, b) {
 		var c = a - b;
 		return (c < 0 ? -1 : (c = 0 ? 0 : 1));
 	}
 	var d_temp = data.filter(d => !d.o.indoor)
-					.map(o => o.o.data[user_selected_value])
-					.sort(sort_num);
+		.map(o => o.o.data[user_selected_value])
+		.sort(sort_num);
 	return median(d_temp);
 }
 
@@ -616,32 +616,30 @@ function sensorNr(data) {
 		}
 	}
 
-	openSidebar();
-	let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th><th>Last date update</th><th>Network</th></tr>";
+	let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th><th>Last date update</th>" + "<th class ='title'>" + translate.tr(lang, 'Sensor') + "</th></tr>";
 	if (data.length > 1) {
 		textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + parseInt(data_median(data)) + "</td><td></td><td></td></tr>";
 	}
 	let sensors = '';
 	data.forEach(function (i) {
-		if (i.o.id === undefined && i.o.data[user_selected_value] === 0){
+		if (i.o.id === undefined && i.o.data[user_selected_value] === 0) {
 			return null
 		} else {
-			sensors += "<tr><td class='idsens' id='id_" + i.o.id + "'>" + inner_pre + i.o.id + (i.o.indoor? " (indoor)":"") +"</td>";
+			sensors += "<tr><td class='idsens' id='id_" + i.o.id + "'>" + inner_pre + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
 			if (user_selected_value === "PM10") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
-				sensors += "<td>" + i.o.date + "</td>";
-				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>"
+				sensors += "<td>" + i.o.name + "</td></tr>";
 			}
 			if (user_selected_value === "PM25") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
-				sensors += "<td>" + i.o.date + "</td>";
-				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
-
+				sensors += "<td>" + i.o.date + "</td>"
+				sensors += "<td>" + i.o.name + "</td></tr>";
 			}
 			if (user_selected_value === "Official_AQI_US") {
 				sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td>"
-				sensors += "<td>" + i.o.date + "</td>";
-				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>"
+				sensors += "<td>" + i.o.name + "</td></tr>";
 			}
 			if (user_selected_value === "Temperature") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
@@ -691,7 +689,7 @@ function displayGraph(id) {
 		d3.select(iddiv).append("td")
 			.attr("id", "frame_" + sens)
 			.attr("colspan", "3")
-			.html((panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][0]).replace("<SENSOR>", sens) + "<br/>":"") + (panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][1]).replace("<SENSOR>", sens):""));
+			.html((panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][0]).replace("<SENSOR>", sens) + "<br/>" : "") + (panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][1]).replace("<SENSOR>", sens) : ""));
 
 		if (user_selected_value !== "Official_AQI_US") inner_pre = "(-) ";
 		d3.select("#id_" + sens).html(inner_pre + "#" + sens);
@@ -720,10 +718,10 @@ function showAllSelect() {
 		custom_select.append("div").attr("class", "select-items");
 		custom_select.select("select").selectAll("option").each(function (d) {
 			console.log(d3.select(this).html());
-			if (this.value !== user_selected_value) custom_select.select(".select-items").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
+			if (this.value !== user_selected_value) custom_select.select(".select-items").append("div").html("<span>" + d3.select(this).html() + "</span>").attr("id", "select-item-" + this.value).on("click", function () {
 				switchTo(this);
 			});
-			custom_select.select("#select-item-Noise").select("span").attr("id","noise_option");
+			custom_select.select("#select-item-Noise").select("span").attr("id", "noise_option");
 		});
 		custom_select.select(".select-selected").attr("class", "select-selected select-arrow-active");
 	}
@@ -732,12 +730,12 @@ function showAllSelect() {
 function switchTo(element) {
 	const custom_select = d3.select("#custom-select");
 	custom_select.select("select").property("value", element.id.substring(12));
-	custom_select.select(".select-selected").html("<span>"+custom_select.select("select").select("option:checked").html()+"</span>");
+	custom_select.select(".select-selected").html("<span>" + custom_select.select("select").select("option:checked").html() + "</span>");
 	user_selected_value = element.id.substring(12);
 	if (user_selected_value == "Noise") {
-		custom_select.select(".select-selected").select("span").attr("id","noise_option");
+		custom_select.select(".select-selected").select("span").attr("id", "noise_option");
 	} else {
-		custom_select.select(".select-selected").select("span").attr("id",null);
+		custom_select.select(".select-selected").select("span").attr("id", null);
 	}
 	custom_select.select(".select-selected").attr("class", "select-selected");
 	reloadMap(user_selected_value);
