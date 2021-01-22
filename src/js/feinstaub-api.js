@@ -1,6 +1,6 @@
 import _ from "lodash";
 import "whatwg-fetch";
-
+import tokens from "./tokens"
 let api = {
   pm_sensors: {
     SDS011: true,
@@ -118,7 +118,7 @@ let api = {
 	now returns data from last 5 minutes, so we group all data by sensorId
 	 and compute a mean to get distinct values per sensor */
   getData: async function (URL, num) {
-    const token = process.env.ACCESS_TOKEN;
+    const token = tokens.wbKey;
     function getRightValue(array, type) {
       let value;
       array.forEach(function (item) {
