@@ -131,7 +131,7 @@ let api = {
 
     return fetch(URL, {
       headers: {
-        Authorization: `token ${token}`,
+        Authorization: token ? `token ${token}` : ``,
       },
     })
       .then((resp) => resp.json())
