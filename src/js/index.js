@@ -637,27 +637,32 @@ function sensorNr(data) {
 			}
 			if (user_selected_value === "PM25") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
-				sensors += "<td>" + i.o.date + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>";
 				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 
 			}
 			if (user_selected_value === "Official_AQI_US") {
 				sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td>"
-				sensors += "<td>" + i.o.date + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>";
+				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 			}
 			if (user_selected_value === "Temperature") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
-				sensors += "<td>" + i.o.date + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>";
+				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 			}
 			if (user_selected_value === "Humidity") {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
-				sensors += "<td>" + i.o.date + "</td></tr>";
+				sensors += "<td>" + i.o.date + "</td>";
+				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 			}
 			if (user_selected_value === "Pressure") {
-				sensors += "<td>" + i.o.data[user_selected_value].toFixed(1) + "</td></tr>";
+				sensors += "<td>" + i.o.data[user_selected_value].toFixed(1) + "</td>";
+				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 			}
 			if (user_selected_value === "Noise") {
-				sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+				sensors += "<td>" + i.o.data[user_selected_value] + "</td>";
+				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
 			}
 			sensors += "<tr id='graph_" + i.o.id + "'></tr>";
 		}
