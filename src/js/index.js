@@ -614,7 +614,7 @@ function sensorNr(data) {
 		} else if (data === 23) {
 			return "PurpleAir"
 		} else if (data === 22) {
-			return "PurpleAir"
+			return "OpenAQ"
 		} else {
 			return "SensorsAPI"
 		}
