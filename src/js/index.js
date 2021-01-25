@@ -616,6 +616,7 @@ function sensorNr(data) {
 		}
 	}
 
+	openSidebar();
 	let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th><th>Last date update</th><th>Network</th></tr>";
 	if (data.length > 1) {
 		textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + parseInt(data_median(data)) + "</td><td></td><td></td></tr>";
