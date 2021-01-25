@@ -118,6 +118,8 @@ let api = {
 	 and compute a mean to get distinct values per sensor */
 	getData: async function (URL, num) {
 
+		const token = process.env.token;
+
 		function getRightValue(array, type) {
 			let value;
 			array.forEach(function (item) {
@@ -128,7 +130,15 @@ let api = {
 			return value;
 		}
 
-		return fetch(URL)
+		const myHeaders = new Headers();
+
+		if (token) {
+			myHeaders.append('Authorization', `token ${token}`)
+		}
+
+		return fetch(URL, {
+			headers: myHeaders
+		})
 			.then((resp) => resp.json())
 			.then((json) => {
 				console.log('successful retrieved data');
