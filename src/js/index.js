@@ -636,7 +636,6 @@ function sensorNr(data) {
 				sensors += "<td>" + i.o.data[user_selected_value] + "</td>"
 				sensors += "<td>" + i.o.date + "</td>";
 				sensors += "<td>" + getNetwork(i.o.network) + "</td></tr>";
-
 			}
 			if (user_selected_value === "Official_AQI_US") {
 				sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td>"

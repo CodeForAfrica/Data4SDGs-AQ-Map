@@ -145,6 +145,7 @@ let api = {
 	                );
 	                return stat ? Number(stat.sensor_id) : undefined;
 	              };
+								const network = Number(values.node.owner);
 	              const lat = Number(values.location.latitude);
 	              const long = Number(values.location.longitude);
 	              const date = new Date(values.last_data_received_at);
@@ -154,6 +155,7 @@ let api = {
 	                "latitude": lat,
 	                "longitude": long,
 	                "id":id(),
+									"network":network,
 	                "date": date.toLocaleDateString(),
 	                "data": {
 	                  "PM10": P1 ? P1.average.toFixed(0) : 0,
@@ -175,6 +177,7 @@ let api = {
                 );
                 return stat ? Number(stat.sensor_id) : undefined;
               };
+							const network = Number(values.node.owner);
 							const date = new Date(values.last_data_received_at);
 							const P1 = values.stats.find(s => s.value_type === "P1");
 							const P2 = values.stats.find(s => s.value_type === "P2");
@@ -191,6 +194,7 @@ let api = {
 									"PM10_24h": data_in.PM10,
 									"PM25_24h": data_in.PM25
 								},
+								"network":network,
 								"id": id(),
 								"date": date.toLocaleDateString(),
 								"latitude": values.location.latitude,
@@ -214,6 +218,7 @@ let api = {
 							 );
 							 return stat ? Number(stat.sensor_id) : undefined;
 						 };
+						 const network = Number(values.node.owner);
 						 const lat = Number(values.location.latitude);
 						 const long = Number(values.location.longitude);
 						 const date = new Date(values.last_data_received_at);
@@ -223,6 +228,7 @@ let api = {
 							 "latitude": lat,
 							 "longitude": long,
 							 "id": id(),
+							 "network":network,
 							 "date": date.toLocaleDateString(),
 							 "data": {
 								 "Humidity": humidity ? Math.round(humidity.average)  : 0,
