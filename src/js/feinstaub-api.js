@@ -118,7 +118,7 @@ let api = {
 	 and compute a mean to get distinct values per sensor */
 	getData: async function (URL, num) {
 
-		const token = process.env.token;
+		const token = process.env.MAP_TOKEN;
 
 		function getRightValue(array, type) {
 			let value;
