@@ -17,7 +17,6 @@ jobs:
 
     - name: Build
       run: |
-        npm install
         npm run build
       env:
         MAP_TOKEN: ${{ secrets.MAP_TOKEN }}
@@ -28,4 +27,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: dist
-        
