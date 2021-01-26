@@ -17,6 +17,8 @@ jobs:
 
     - name: Build
       run: |
+        cp src/js/config.js.dist src/js/config.js
+        npm install
         npm run build
       env:
         MAP_TOKEN: ${{ secrets.MAP_TOKEN }}
