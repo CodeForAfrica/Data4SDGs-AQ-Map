@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - token/feature
 
 jobs:
   build:
@@ -28,3 +28,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: dist
+        
