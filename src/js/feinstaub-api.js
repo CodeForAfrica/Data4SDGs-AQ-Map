@@ -119,6 +119,7 @@ let api = {
 	getData: async function (URL, num) {
 
 		const token = process.env.MAP_TOKEN;
+		console.log('TOKEN', token, process.env) //to be deleted
 
 		function getRightValue(array, type) {
 			let value;
