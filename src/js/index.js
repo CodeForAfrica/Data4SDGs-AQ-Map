@@ -605,14 +605,19 @@ function sensorNr(data) {
 	}
 
 	function getNetwork(data) {
-		if (data === 24) {
-			return "AirQO"
-		} else if (data === 23) {
-			return "PurpleAir"
-		} else if (data === 22) {
-			return "OpenAQ"
-		} else {
-			return "sensors.AFRICA"
+		switch (data) {
+			case 22:
+				return "OpenAQ";
+			case 23:
+				return "PurpleAir";
+			case 24:
+				return "AirQO";
+			case 26:
+				return "AirNow"
+			case 27:
+				return "SmartCitizen"
+			default:
+				return "sensors.AFRICA"
 		}
 	}
 
