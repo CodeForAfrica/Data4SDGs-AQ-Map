@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - token/feature
+      - master
 
 jobs:
   build:
@@ -20,8 +20,6 @@ jobs:
         cp src/js/config.js.dist src/js/config.js
         npm install
         npm run build
-      env:
-        MAP_TOKEN: ${{ secrets.MAP_TOKEN }}
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
