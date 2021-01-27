@@ -616,6 +616,8 @@ function sensorNr(data) {
 				return "AirNow"
 			case 27:
 				return "SmartCitizen"
+			case 28:
+				return "OpenData Durban"
 			default:
 				return "sensors.AFRICA"
 		}
