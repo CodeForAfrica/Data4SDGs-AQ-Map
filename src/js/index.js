@@ -438,16 +438,16 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
 //	REVOIR ORDRE DANS FONCTION READY
 	function retrieveData() {
-		api.getData("https://wb-sensors-dashboard.vercel.app/api/sensors", 1).then(function (result) {
+		api.getData("https://data4sdgs.sensors.africa/api/nodes", 1).then(function (result) {
 			hmhexaPM_aktuell = result.cells;
 			if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
 			ready(1);
-			api.getData("https://wb-sensors-dashboard.vercel.app/api/sensors", 2).then(function (result) {
+			api.getData("https://data4sdgs.sensors.africa/api/nodes", 2).then(function (result) {
 				hmhexaPM_AQI = result.cells;
 				if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
 				ready(2);
 			});
-			api.getData("https://wb-sensors-dashboard.vercel.app/api/sensors", 3).then(function (result) {
+			api.getData("https://data4sdgs.sensors.africa/api/nodes", 3).then(function (result) {
 				hmhexa_t_h_p = result.cells;
 				if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
 				ready(3);

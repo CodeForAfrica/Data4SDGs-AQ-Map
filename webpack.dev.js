@@ -6,9 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const Dotenv = require('dotenv-webpack');
-
-
 module.exports = {
 
 	// https://webpack.js.org/concepts/entry-points/#multi-page-application
@@ -64,7 +61,6 @@ module.exports = {
 
 	// https://webpack.js.org/concepts/plugins/
 	plugins: [
-		new Dotenv(),
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			inject: true,
