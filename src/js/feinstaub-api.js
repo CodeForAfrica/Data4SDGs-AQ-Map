@@ -117,7 +117,6 @@ let api = {
 	now returns data from last 5 minutes, so we group all data by sensorId
 	 and compute a mean to get distinct values per sensor */
 	getData: async function (URL, num) {
-
 		function getRightValue(array, type) {
 			let value;
 			array.forEach(function (item) {
