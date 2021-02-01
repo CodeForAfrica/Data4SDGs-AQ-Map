@@ -495,6 +495,9 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		if (! d3.select("#custom-select").select(".select-items").empty()) {
 			d3.select("#custom-select").select(".select-items").remove();
 			d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
+		} else if (! d3.select("#custom-select-network").select(".select-items-network").empty()) {
+			d3.select("#custom-select-network").select(".select-items-network").remove();
+			d3.select("#custom-select-network").select(".select-selected-network").attr("class", "select-selected-network");
 		} else {
 			map.clicked = map.clicked + 1;
 			timeout(function () {
@@ -617,7 +620,9 @@ function reloadMap(val) {
 	} else if (val === 'OpenAQ') {
 		const openAQNodes = hmhexaPM_aktuell.filter(node => node.network === 22);
 		hexagonheatmap.data(openAQNodes);
-	} 
+	} else if (val === 'All') {
+		hexagonheatmap.data(hmhexaPM_aktuell);
+	}
 }
 
 function sensorNr(data) {
@@ -763,7 +768,7 @@ function showAllSelectNetwork() {
 		custom_select_network.append("div").attr("class", "select-items-network");
 		custom_select_network.select("select").selectAll("option").each(function (d) {
 			console.log(d3.select(this).html());
-			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-network-" + this.value).on("click", function () {
+			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
 				switchToNetwork(this);
 			});
 		});
@@ -793,16 +798,8 @@ function switchToNetwork(element) {
 	custom_select_network.select(".select-selected-network").html("<span>"+custom_select_network.select("select").select("option:checked").html()+"</span>");
 	network_selected_value = element.id.substring(12);
 
-	// Currently breaks here
-
-	console.log('WHICH ONE', network_selected_value)
-
-	// if (user_selected_value == "Noise") {
-	// 	custom_select.select(".select-selected").select("span").attr("id","noise_option");
-	// } else {
-	// 	custom_select.select(".select-selected").select("span").attr("id",null);
-	// }
-	// custom_select.select(".select-selected").attr("class", "select-selected");
-	// reloadMap(user_selected_value);
-	// custom_select.select(".select-items").remove();
+	custom_select_network.select(".select-selected-network").select("span").attr("id",null);
+	custom_select_network.select(".select-selected-network").attr("class", "select-selected");
+	reloadMap(network_selected_value);
+	custom_select_network.select(".select-items-network").remove();
 }
