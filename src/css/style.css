@@ -92,7 +92,27 @@ body {
     pointer-events: auto;
 }
 
+.custom-select-network {
+    color: black;
+    font-weight: bold;
+    font-size: 1.1rem;
+    width: 10em;
+    height: 2.2rem;
+    display: inline-block;
+    background-color: rgba(56, 181, 173, 0.8);
+    border-radius: 8px;
+    border: 1px solid transparent;
+    position: absolute;
+    bottom: 1rem;
+    margin-left: 80rem;
+    pointer-events: auto;
+}
+
 .custom-select:hover, .custom-select:focus {
+    background-color: rgb(49, 135, 127);
+}
+
+.custom-select-network:hover, .custom-select-.custom-select-network {
     background-color: rgb(49, 135, 127);
 }
 
@@ -100,7 +120,15 @@ body {
     display: none; /*hide original SELECT element:*/
 }
 
+.custom-select-network select {
+    display: none; /*hide original SELECT element:*/
+}
+
 .select-selected {
+    bottom: 0;
+    width: 100%;
+}
+.select-selected-network {
     bottom: 0;
     width: 100%;
 }
@@ -114,9 +142,21 @@ body {
     border-left: thin solid white;
     padding-left: 10px;
 }
+.select-selected-network:after {
+    position: absolute;
+    content: "▲";
+    right: 10px;
+    width: auto;
+    height: 0;
+    border-left: thin solid white;
+    padding-left: 10px;
+}
 
 /*point the arrow downwards when the select box is open (active):*/
 .select-selected.select-arrow-active:after {
+    content: "▼"
+}
+.select-selected-network.select-arrow-active:after {
     content: "▼"
 }
 
@@ -124,8 +164,17 @@ body {
 .select-selected.select-arrow-inactive:after {
     content: "▲"
 }
+.select-selected-network.select-arrow-inactive:after {
+    content: "▲"
+}
 /*style the items (options), including the selected item:*/
 .select-items div, .select-selected {
+    color: #ffffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    user-select: none;
+}
+.select-items-network div, .select-selected-network {
     color: #ffffff;
     padding: 8px 16px;
     cursor: pointer;
@@ -140,8 +189,20 @@ body {
     background-color: rgba(56, 181, 173, 0.8);
     border: 1px solid transparent;
 }
+.select-items-network {
+    position: absolute;
+    bottom: 100%;
+    width: 100%;
+    border-radius: 8px;
+    background-color: rgba(56, 181, 173, 0.8);
+    border: 1px solid transparent;
+}
 
 .select-items div:hover, .same-as-selected {
+    border-radius: 8px;
+    background-color: rgb(49, 135, 127);
+}
+.select-items-network div:hover, .same-as-selected {
     border-radius: 8px;
     background-color: rgb(49, 135, 127);
 }

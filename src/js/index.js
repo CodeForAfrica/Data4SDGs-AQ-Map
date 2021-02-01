@@ -32,6 +32,7 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
 
 // selected value from the dropdown
 let user_selected_value = config.selection;
+let network_selected_value = 'All';
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -430,6 +431,18 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		custom_select.select("select").select("option:checked").html())+"</span>").on("click", showAllSelect);
 	custom_select.style("display", "inline-block");
 
+
+	// Network select
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", 'All');
+	custom_select_network.select("select").selectAll("option").each(function () {
+		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
+	});
+
+	custom_select_network.append("div").attr("class", "select-selected-network").html("<span>"+translate.tr(lang,
+		custom_select_network.select("select").select("option:checked").html())+"</span>").on("click", showAllSelectNetwork);
+	custom_select_network.style("display", "inline-block");
+
 	switchLegend(user_selected_value);
 
 	map.setView(coordsCenter, zoomLevel);
@@ -482,6 +495,9 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		if (! d3.select("#custom-select").select(".select-items").empty()) {
 			d3.select("#custom-select").select(".select-items").remove();
 			d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
+		} else if (! d3.select("#custom-select-network").select(".select-items-network").empty()) {
+			d3.select("#custom-select-network").select(".select-items-network").remove();
+			d3.select("#custom-select-network").select(".select-selected-network").attr("class", "select-selected-network");
 		} else {
 			map.clicked = map.clicked + 1;
 			timeout(function () {
@@ -595,6 +611,17 @@ function reloadMap(val) {
 		}));
 	} else if (val === "Noise") {
 		hexagonheatmap.data(hmhexa_noise);
+	} else if (val === 'PurpleAir') {
+		const purpleAirNodes = hmhexaPM_aktuell.filter(node => node.network === 23);
+		hexagonheatmap.data(purpleAirNodes);	
+	} else if (val === 'AirQ0') {
+		const airQONodes = hmhexaPM_aktuell.filter(node => node.network === 24);
+		hexagonheatmap.data(airQONodes);
+	} else if (val === 'OpenAQ') {
+		const openAQNodes = hmhexaPM_aktuell.filter(node => node.network === 22);
+		hexagonheatmap.data(openAQNodes);
+	} else if (val === 'All') {
+		hexagonheatmap.data(hmhexaPM_aktuell);
 	}
 }
 
@@ -735,11 +762,26 @@ function showAllSelect() {
 	}
 }
 
+function showAllSelectNetwork() {
+	const custom_select_network = d3.select("#custom-select-network");
+	if (custom_select_network.select(".select-items-network").empty()) {
+		custom_select_network.append("div").attr("class", "select-items-network");
+		custom_select_network.select("select").selectAll("option").each(function (d) {
+			console.log(d3.select(this).html());
+			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
+				switchToNetwork(this);
+			});
+		});
+	}
+	
+}
+
 function switchTo(element) {
 	const custom_select = d3.select("#custom-select");
 	custom_select.select("select").property("value", element.id.substring(12));
 	custom_select.select(".select-selected").html("<span>"+custom_select.select("select").select("option:checked").html()+"</span>");
 	user_selected_value = element.id.substring(12);
+
 	if (user_selected_value == "Noise") {
 		custom_select.select(".select-selected").select("span").attr("id","noise_option");
 	} else {
@@ -748,4 +790,16 @@ function switchTo(element) {
 	custom_select.select(".select-selected").attr("class", "select-selected");
 	reloadMap(user_selected_value);
 	custom_select.select(".select-items").remove();
+}
+
+function switchToNetwork(element) {
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", element.id.substring(12));
+	custom_select_network.select(".select-selected-network").html("<span>"+custom_select_network.select("select").select("option:checked").html()+"</span>");
+	network_selected_value = element.id.substring(12);
+
+	custom_select_network.select(".select-selected-network").select("span").attr("id",null);
+	custom_select_network.select(".select-selected-network").attr("class", "select-selected");
+	reloadMap(network_selected_value);
+	custom_select_network.select(".select-items-network").remove();
 }
