@@ -32,6 +32,7 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
 
 // selected value from the dropdown
 let user_selected_value = config.selection;
+let network_selected_value = 'All';
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -430,6 +431,18 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		custom_select.select("select").select("option:checked").html())+"</span>").on("click", showAllSelect);
 	custom_select.style("display", "inline-block");
 
+
+	// Network select
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", 'All');
+	custom_select_network.select("select").selectAll("option").each(function () {
+		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
+	});
+
+	custom_select_network.append("div").attr("class", "select-selected-network").html("<span>"+translate.tr(lang,
+		custom_select_network.select("select").select("option:checked").html())+"</span>").on("click", showAllSelectNetwork);
+	custom_select_network.style("display", "inline-block");
+
 	switchLegend(user_selected_value);
 
 	map.setView(coordsCenter, zoomLevel);
@@ -597,7 +610,7 @@ function reloadMap(val) {
 		hexagonheatmap.data(hmhexa_noise);
 	} else if (val === 'PurpleAir') {
 		const purpleAirNodes = hmhexaPM_aktuell.filter(node => node.network === 23);
-		hexagonheatmap.data(purpleAirNodes);
+		hexagonheatmap.data(purpleAirNodes);	
 	} else if (val === 'AirQ0') {
 		const airQONodes = hmhexaPM_aktuell.filter(node => node.network === 24);
 		hexagonheatmap.data(airQONodes);
@@ -744,6 +757,20 @@ function showAllSelect() {
 	}
 }
 
+function showAllSelectNetwork() {
+	const custom_select_network = d3.select("#custom-select-network");
+	if (custom_select_network.select(".select-items-network").empty()) {
+		custom_select_network.append("div").attr("class", "select-items-network");
+		custom_select_network.select("select").selectAll("option").each(function (d) {
+			console.log(d3.select(this).html());
+			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-network-" + this.value).on("click", function () {
+				switchToNetwork(this);
+			});
+		});
+	}
+	
+}
+
 function switchTo(element) {
 	const custom_select = d3.select("#custom-select");
 	custom_select.select("select").property("value", element.id.substring(12));
@@ -758,4 +785,24 @@ function switchTo(element) {
 	custom_select.select(".select-selected").attr("class", "select-selected");
 	reloadMap(user_selected_value);
 	custom_select.select(".select-items").remove();
+}
+
+function switchToNetwork(element) {
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", element.id.substring(12));
+	custom_select_network.select(".select-selected-network").html("<span>"+custom_select_network.select("select").select("option:checked").html()+"</span>");
+	network_selected_value = element.id.substring(12);
+
+	// Currently breaks here
+
+	console.log('WHICH ONE', network_selected_value)
+
+	// if (user_selected_value == "Noise") {
+	// 	custom_select.select(".select-selected").select("span").attr("id","noise_option");
+	// } else {
+	// 	custom_select.select(".select-selected").select("span").attr("id",null);
+	// }
+	// custom_select.select(".select-selected").attr("class", "select-selected");
+	// reloadMap(user_selected_value);
+	// custom_select.select(".select-items").remove();
 }
