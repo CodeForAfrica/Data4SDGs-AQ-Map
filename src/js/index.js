@@ -596,14 +596,15 @@ function reloadMap(val) {
 	} else if (val === "Noise") {
 		hexagonheatmap.data(hmhexa_noise);
 	} else if (val === 'PurpleAir') {
-		//filter purpleAir
+		const purpleAirNodes = hmhexaPM_aktuell.filter(node => node.network === 23);
+		hexagonheatmap.data(purpleAirNodes);
 	} else if (val === 'AirQ0') {
-		// filter AirQ0 nodes
+		const airQONodes = hmhexaPM_aktuell.filter(node => node.network === 24);
+		hexagonheatmap.data(airQONodes);
 	} else if (val === 'OpenAQ') {
-		//filter openAQ nodes
-	} else if (val === 'Data4SDGS') {
-		//filter Datasdgs
-	}
+		const openAQNodes = hmhexaPM_aktuell.filter(node => node.network === 22);
+		hexagonheatmap.data(openAQNodes);
+	} 
 }
 
 function sensorNr(data) {
