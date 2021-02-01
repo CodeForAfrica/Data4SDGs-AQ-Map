@@ -595,6 +595,14 @@ function reloadMap(val) {
 		}));
 	} else if (val === "Noise") {
 		hexagonheatmap.data(hmhexa_noise);
+	} else if (val === 'PurpleAir') {
+		//filter purpleAir
+	} else if (val === 'AirQ0') {
+		// filter AirQ0 nodes
+	} else if (val === 'OpenAQ') {
+		//filter openAQ nodes
+	} else if (val === 'Data4SDGS') {
+		//filter Datasdgs
 	}
 }
 
@@ -740,6 +748,7 @@ function switchTo(element) {
 	custom_select.select("select").property("value", element.id.substring(12));
 	custom_select.select(".select-selected").html("<span>"+custom_select.select("select").select("option:checked").html()+"</span>");
 	user_selected_value = element.id.substring(12);
+
 	if (user_selected_value == "Noise") {
 		custom_select.select(".select-selected").select("span").attr("id","noise_option");
 	} else {
