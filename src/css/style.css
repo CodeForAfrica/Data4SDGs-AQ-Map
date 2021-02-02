@@ -76,7 +76,7 @@ body {
     pointer-events: none;
 }
 
-.custom-select {
+.custom-select, .custom-select-network {
     color: black;
     font-weight: bold;
     font-size: 1.1rem;
@@ -92,20 +92,24 @@ body {
     pointer-events: auto;
 }
 
-.custom-select:hover, .custom-select:focus {
+.custom-select-network {
+    margin-left: 80rem;
+}
+
+.custom-select:hover, .custom-select:focus, .custom-select-network:hover,.custom-select-.custom-select-network  {
     background-color: rgb(49, 135, 127);
 }
 
-.custom-select select {
+.custom-select select, .custom-select-network select {
     display: none; /*hide original SELECT element:*/
 }
 
-.select-selected {
+.select-selected, .select-selected-network {
     bottom: 0;
     width: 100%;
 }
 
-.select-selected:after {
+.select-selected:after, .select-selected-network:after {
     position: absolute;
     content: "▲";
     right: 10px;
@@ -120,19 +124,27 @@ body {
     content: "▼"
 }
 
+.select-selected-network.select-arrow-active:after {
+    content: "▼"
+}
+
 /*point the arrow upwards when the select box is closed (inactive):*/
 .select-selected.select-arrow-inactive:after {
     content: "▲"
 }
+
+.select-selected-network.select-arrow-inactive:after {
+    content: "▲"
+}
 /*style the items (options), including the selected item:*/
-.select-items div, .select-selected {
+.select-items div, .select-selected, .select-items-network div, .select-selected-network {
     color: #ffffff;
     padding: 8px 16px;
     cursor: pointer;
     user-select: none;
 }
 
-.select-items {
+.select-items, .select-items-network {
     position: absolute;
     bottom: 100%;
     width: 100%;
@@ -141,7 +153,7 @@ body {
     border: 1px solid transparent;
 }
 
-.select-items div:hover, .same-as-selected {
+.select-items div:hover, .same-as-selected, .select-items-network div:hover, .same-as-selected {
     border-radius: 8px;
     background-color: rgb(49, 135, 127);
 }
