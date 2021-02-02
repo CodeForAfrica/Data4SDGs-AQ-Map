@@ -93,7 +93,26 @@ body {
 }
 
 .custom-select-network {
-    margin-left: 80rem;
+    margin-left: 50rem;
+}
+
+@media screen and (max-width: 767px) {
+    .custom-select-network {
+        margin-left: 1rem;
+        bottom: 8rem;
+    }
+}
+
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+    .custom-select-network {
+        margin-left: 60vw;
+    }
+}
+
+ @media screen and (min-width: 1025px) {
+    .custom-select-network {
+        margin-left: 70vw;
+    }
 }
 
 .custom-select:hover, .custom-select:focus, .custom-select-network:hover,.custom-select-.custom-select-network  {
