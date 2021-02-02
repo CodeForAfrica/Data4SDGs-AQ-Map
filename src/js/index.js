@@ -32,7 +32,7 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
 
 // selected value from the dropdown
 let user_selected_value = config.selection;
-let network_selected_value = 'All';
+let network_selected_value = 'sensorsAfrica';
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -433,7 +433,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
 	// Network select
 	const custom_select_network = d3.select("#custom-select-network");
-	custom_select_network.select("select").property("value", 'All');
+	custom_select_network.select("select").property("value", 'sensorsAfrica');
 	custom_select_network.select("select").selectAll("option").each(function () {
 		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
 	});
@@ -593,37 +593,37 @@ function ready(num) {
 	d3.select("#loading").style("display", "none");
 }
 
-function reloadMap(val) {
+function reloadMap(network, type) {
+	const networkMap = {
+		AirNow : 26,
+		AirQO : 24,
+		OpenDataDurban: 28,
+		PurpleAir: 23,
+		SensorCommunity: 29,
+		SamrtCitizen: 27
+	}
 	d3.selectAll('path.hexbin-hexagon').remove();
 
 	closeSidebar();
+	switchLegend(type);
 
-	hexagonheatmap.initialize(scale_options[val]);
-	if (val === "PM10" || val === "PM25") {
-		switchLegend(val);
-		hexagonheatmap.data(hmhexaPM_aktuell);
-	} else if (val === "Official_AQI_US") {
-		switchLegend(val);
-		hexagonheatmap.data(hmhexaPM_AQI);
-	} else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
-		switchLegend(val);
-		hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
-			return api.checkValues(value.data[user_selected_value], user_selected_value);
-		}));
-	} else if (val === "Noise") {
-		switchLegend(val);
-		hexagonheatmap.data(hmhexa_noise);
-	} else if (val === "PurpleAir") {
-		const purpleAirNodes = hmhexaPM_aktuell.filter(node => node.network === 23);
-		hexagonheatmap.data(purpleAirNodes);
-	} else if (val === "AirQ0") {
-		const airQONodes = hmhexaPM_aktuell.filter(node => node.network === 24);
-		hexagonheatmap.data(airQONodes);
-	} else if (val === "OpenAQ") {
-		const openAQNodes = hmhexaPM_aktuell.filter(node => node.network === 22);
-		hexagonheatmap.data(openAQNodes);
-	} else if (val === "All") {
-		hexagonheatmap.data(hmhexaPM_aktuell);
+	hexagonheatmap.initialize(scale_options[type]);
+
+	if(type === "PM10" || type === "PM25") {
+		if (network === "sensorsAfrica") {
+			hexagonheatmap.data(hmhexaPM_aktuell);
+		} else {
+			const data = hmhexaPM_aktuell.filter(node => node.network === networkMap[network])
+			hexagonheatmap.data(data);
+		}
+		
+	} else if (type === "Official_AQI_US") {
+		if (network === "sensorsAfrica") {
+			hexagonheatmap.data(hmhexaPM_AQI);
+		} else {
+			const data = hmhexaPM_AQI.filter(node => node.network === networkMap[network]);
+			hexagonheatmap.data(data)
+		}
 	}
 }
 
@@ -754,7 +754,6 @@ function showAllSelect() {
 	if (custom_select.select(".select-items").empty()) {
 		custom_select.append("div").attr("class", "select-items");
 		custom_select.select("select").selectAll("option").each(function (d) {
-			console.log(d3.select(this).html());
 			if (this.value !== user_selected_value) custom_select.select(".select-items").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
 				switchTo(this);
 			});
@@ -769,10 +768,10 @@ function showAllSelectNetwork() {
 	if (custom_select_network.select(".select-items-network").empty()) {
 		custom_select_network.append("div").attr("class", "select-items-network");
 		custom_select_network.select("select").selectAll("option").each(function (d) {
-			console.log(d3.select(this).html());
 			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
 				switchToNetwork(this);
 			});
+			custom_select_network.select(".select-selected-network").attr("class", "select-selected-network select-arrow-active");
 		});
 	}
 
@@ -790,7 +789,7 @@ function switchTo(element) {
 		custom_select.select(".select-selected").select("span").attr("id",null);
 	}
 	custom_select.select(".select-selected").attr("class", "select-selected");
-	reloadMap(user_selected_value);
+	reloadMap(network_selected_value, user_selected_value);
 	custom_select.select(".select-items").remove();
 }
 
@@ -802,6 +801,6 @@ function switchToNetwork(element) {
 
 	custom_select_network.select(".select-selected-network").select("span").attr("id",null);
 	custom_select_network.select(".select-selected-network").attr("class", "select-selected-network");
-	reloadMap(network_selected_value);
+	reloadMap(network_selected_value, user_selected_value);
 	custom_select_network.select(".select-items-network").remove();
 }

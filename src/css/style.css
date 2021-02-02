@@ -94,6 +94,7 @@ body {
 
 .custom-select-network {
     margin-left: 50rem;
+    width: 12em;
 }
 
 @media screen and (max-width: 767px) {
