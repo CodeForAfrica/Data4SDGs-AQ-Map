@@ -602,6 +602,15 @@ function reloadMap(network, type) {
 		SensorCommunity: 29,
 		SmartCitizen: 27
 	}
+	// map of the node networks for filtering
+	const nodeNetworks = {
+		26: 26,
+		24: 24,
+		28: 28,
+		23: 23,
+		29: 29,
+		27: 27
+	}
 	d3.selectAll('path.hexbin-hexagon').remove();
 
 	closeSidebar();
@@ -610,19 +619,29 @@ function reloadMap(network, type) {
 	hexagonheatmap.initialize(scale_options[type]);
 
 	const renderNodes = (nodes) => {
-		const data = nodes.filter(node => node.network === networkMap[network]);
+		let data;
+		if (network === "sensorsAfrica") {
+			data = nodes.filter(node => {
+				if (!nodeNetworks[node.network]) {
+					return node
+				}
+				
+			})
+		} else {
+			data = nodes.filter(node => node.network === networkMap[network])
+		}
 		hexagonheatmap.data(data)
 	}
 
 	if(type === "PM10" || type === "PM25") {
-		if (network === "sensorsAfrica") {
+		if (network === "All Networks") {
 			hexagonheatmap.data(hmhexaPM_aktuell);
 		} else {
 			renderNodes(hmhexaPM_aktuell)
 		}
 		
 	} else if (type === "Official_AQI_US") {
-		if (network === "sensorsAfrica") {
+		if (network === "All Networks") {
 			hexagonheatmap.data(hmhexaPM_AQI);
 		} else {
 			renderNodes(hmhexaPM_AQI)
