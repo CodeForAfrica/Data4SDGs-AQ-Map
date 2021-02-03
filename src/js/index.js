@@ -609,20 +609,23 @@ function reloadMap(network, type) {
 
 	hexagonheatmap.initialize(scale_options[type]);
 
+	const renderNodes = (nodes) => {
+		const data = nodes.filter(node => node.network === networkMap[network]);
+		hexagonheatmap.data(data)
+	}
+
 	if(type === "PM10" || type === "PM25") {
 		if (network === "sensorsAfrica") {
 			hexagonheatmap.data(hmhexaPM_aktuell);
 		} else {
-			const data = hmhexaPM_aktuell.filter(node => node.network === networkMap[network])
-			hexagonheatmap.data(data);
+			renderNodes(hmhexaPM_aktuell)
 		}
 		
 	} else if (type === "Official_AQI_US") {
 		if (network === "sensorsAfrica") {
 			hexagonheatmap.data(hmhexaPM_AQI);
 		} else {
-			const data = hmhexaPM_AQI.filter(node => node.network === networkMap[network]);
-			hexagonheatmap.data(data)
+			renderNodes(hmhexaPM_AQI)
 		}
 	}
 }
