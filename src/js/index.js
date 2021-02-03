@@ -600,7 +600,7 @@ function reloadMap(network, type) {
 		OpenDataDurban: 28,
 		PurpleAir: 23,
 		SensorCommunity: 29,
-		SamrtCitizen: 27
+		SmartCitizen: 27
 	}
 	d3.selectAll('path.hexbin-hexagon').remove();
 
@@ -750,6 +750,10 @@ function removeInArray(array) {
 }
 
 function showAllSelect() {
+	// Close network select
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select(".select-items-network").remove();
+
 	const custom_select = d3.select("#custom-select");
 	if (custom_select.select(".select-items").empty()) {
 		custom_select.append("div").attr("class", "select-items");
@@ -764,6 +768,10 @@ function showAllSelect() {
 }
 
 function showAllSelectNetwork() {
+	// Close type select
+	const custom_select = d3.select("#custom-select");
+	custom_select.select(".select-items").remove();
+
 	const custom_select_network = d3.select("#custom-select-network");
 	if (custom_select_network.select(".select-items-network").empty()) {
 		custom_select_network.append("div").attr("class", "select-items-network");
