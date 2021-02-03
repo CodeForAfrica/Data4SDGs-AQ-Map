@@ -32,6 +32,7 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
 
 // selected value from the dropdown
 let user_selected_value = config.selection;
+let network_selected_value = config.networkSelection;
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -430,6 +431,17 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		custom_select.select("select").select("option:checked").html())+"</span>").on("click", showAllSelect);
 	custom_select.style("display", "inline-block");
 
+	// Network select
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", config.networkSelection);
+	custom_select_network.select("select").selectAll("option").each(function () {
+		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
+	});
+
+	custom_select_network.append("div").attr("class", "select-selected-network").html("<span>"+translate.tr(lang,
+		custom_select_network.select("select").select("option:checked").html())+"</span>").on("click", showAllSelectNetwork);
+	custom_select_network.style("display", "inline-block");
+
 	switchLegend(user_selected_value);
 
 	map.setView(coordsCenter, zoomLevel);
@@ -482,6 +494,9 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		if (! d3.select("#custom-select").select(".select-items").empty()) {
 			d3.select("#custom-select").select(".select-items").remove();
 			d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
+		} else if (! d3.select("#custom-select-network").select(".select-items-network").empty()) {
+			d3.select("#custom-select-network").select(".select-items-network").remove();
+			d3.select("#custom-select-network").select(".select-selected-network").attr("class", "select-selected-network");
 		} else {
 			map.clicked = map.clicked + 1;
 			timeout(function () {
@@ -578,23 +593,59 @@ function ready(num) {
 	d3.select("#loading").style("display", "none");
 }
 
-function reloadMap(val) {
+function reloadMap(network, type) {
+	const networkMap = {
+		AirNow : 26,
+		AirQO : 24,
+		OpenDataDurban: 28,
+		PurpleAir: 23,
+		SensorCommunity: 29,
+		SmartCitizen: 27
+	}
+	// map of the node networks for filtering
+	const nodeNetworks = {
+		26: 26,
+		24: 24,
+		28: 28,
+		23: 23,
+		29: 29,
+		27: 27
+	}
 	d3.selectAll('path.hexbin-hexagon').remove();
 
 	closeSidebar();
-	switchLegend(val);
+	switchLegend(type);
 
-	hexagonheatmap.initialize(scale_options[val]);
-	if (val === "PM10" || val === "PM25") {
-		hexagonheatmap.data(hmhexaPM_aktuell);
-	} else if (val === "Official_AQI_US") {
-		hexagonheatmap.data(hmhexaPM_AQI);
-	} else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
-		hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
-			return api.checkValues(value.data[user_selected_value], user_selected_value);
-		}));
-	} else if (val === "Noise") {
-		hexagonheatmap.data(hmhexa_noise);
+	hexagonheatmap.initialize(scale_options[type]);
+
+	const renderNodes = (nodes) => {
+		let data;
+		if (network === "sensorsAfrica") {
+			data = nodes.filter(node => {
+				if (!nodeNetworks[node.network]) {
+					return node
+				}
+				
+			})
+		} else {
+			data = nodes.filter(node => node.network === networkMap[network])
+		}
+		hexagonheatmap.data(data)
+	}
+
+	if(type === "PM10" || type === "PM25") {
+		if (network === "All Networks") {
+			hexagonheatmap.data(hmhexaPM_aktuell);
+		} else {
+			renderNodes(hmhexaPM_aktuell)
+		}
+		
+	} else if (type === "Official_AQI_US") {
+		if (network === "All Networks") {
+			hexagonheatmap.data(hmhexaPM_AQI);
+		} else {
+			renderNodes(hmhexaPM_AQI)
+		}
 	}
 }
 
@@ -721,11 +772,14 @@ function removeInArray(array) {
 }
 
 function showAllSelect() {
+	// Close network select
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select(".select-items-network").remove();
+
 	const custom_select = d3.select("#custom-select");
 	if (custom_select.select(".select-items").empty()) {
 		custom_select.append("div").attr("class", "select-items");
 		custom_select.select("select").selectAll("option").each(function (d) {
-			console.log(d3.select(this).html());
 			if (this.value !== user_selected_value) custom_select.select(".select-items").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
 				switchTo(this);
 			});
@@ -734,6 +788,25 @@ function showAllSelect() {
 		custom_select.select(".select-selected").attr("class", "select-selected select-arrow-active");
 	}
 }
+
+function showAllSelectNetwork() {
+	// Close type select
+	const custom_select = d3.select("#custom-select");
+	custom_select.select(".select-items").remove();
+
+	const custom_select_network = d3.select("#custom-select-network");
+	if (custom_select_network.select(".select-items-network").empty()) {
+		custom_select_network.append("div").attr("class", "select-items-network");
+		custom_select_network.select("select").selectAll("option").each(function (d) {
+			if (this.value !== network_selected_value) custom_select_network.select(".select-items-network").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
+				switchToNetwork(this);
+			});
+			custom_select_network.select(".select-selected-network").attr("class", "select-selected-network select-arrow-active");
+		});
+	}
+
+}
+
 
 function switchTo(element) {
 	const custom_select = d3.select("#custom-select");
@@ -746,6 +819,18 @@ function switchTo(element) {
 		custom_select.select(".select-selected").select("span").attr("id",null);
 	}
 	custom_select.select(".select-selected").attr("class", "select-selected");
-	reloadMap(user_selected_value);
+	reloadMap(network_selected_value, user_selected_value);
 	custom_select.select(".select-items").remove();
+}
+
+function switchToNetwork(element) {
+	const custom_select_network = d3.select("#custom-select-network");
+	custom_select_network.select("select").property("value", element.id.substring(12));
+	custom_select_network.select(".select-selected-network").html("<span>"+custom_select_network.select("select").select("option:checked").html()+"</span>");
+	network_selected_value = element.id.substring(12);
+
+	custom_select_network.select(".select-selected-network").select("span").attr("id",null);
+	custom_select_network.select(".select-selected-network").attr("class", "select-selected-network");
+	reloadMap(network_selected_value, user_selected_value);
+	custom_select_network.select(".select-items-network").remove();
 }
