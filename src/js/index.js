@@ -32,7 +32,7 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
 
 // selected value from the dropdown
 let user_selected_value = config.selection;
-let network_selected_value = 'sensorsAfrica';
+let network_selected_value = config.networkSelection;
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -433,7 +433,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
 	// Network select
 	const custom_select_network = d3.select("#custom-select-network");
-	custom_select_network.select("select").property("value", 'sensorsAfrica');
+	custom_select_network.select("select").property("value", config.networkSelection);
 	custom_select_network.select("select").selectAll("option").each(function () {
 		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
 	});
