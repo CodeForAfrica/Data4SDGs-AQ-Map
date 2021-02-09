@@ -32,7 +32,9 @@ npm start
 ```
 
 ### Publish
-build all files needed to run on a webserver, files will be compiled into `dist/`):
+Deployment to production happens automatically on merge to Master.
+
+To deploy manually, build all files needed to run on a webserver, files will be compiled into `dist/`):
 
 ```
 npm run build
