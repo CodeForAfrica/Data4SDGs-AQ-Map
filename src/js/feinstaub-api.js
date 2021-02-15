@@ -128,14 +128,13 @@ let api = {
 		}
 
 		return (fetch(URL)
-		  	// .then(resp=>resp.json())
+		  	.then(resp=>resp.json())
 			.then((json) => {
 				let timestamp_data = "";
 				let airQualityValues = [];
 				let sensorTypes = [];
 				let tempAndHumidityValues = [];
-
-				_.chain(json)
+				_.chain(json.results)
 				.map((values) => {
 					if (values.last_notify > timestamp_data) {
 						timestamp_data = values.last_notify;
