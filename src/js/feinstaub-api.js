@@ -127,98 +127,98 @@ let api = {
 			return value;
 		}
 
-	return (fetch(URL)
-        //   .then(resp=>resp.json())
-		.then((json) => {
-			let timestamp_data = "";
-			let airQualityValues = [];
-			let sensorTypes = [];
-			let tempAndHumidityValues = [];
+		return (fetch(URL)
+		  	// .then(resp=>resp.json())
+			.then((json) => {
+				let timestamp_data = "";
+				let airQualityValues = [];
+				let sensorTypes = [];
+				let tempAndHumidityValues = [];
 
-			_.chain(json)
-			.map((values) => {
-				if (values.last_notify > timestamp_data) {
-					timestamp_data = values.last_notify;
-				}
-			      	const sensorReadings = getAllReadings(values.sensors);
-			      	const id = () => {
-					const stat = sensorReadings.find(
-						(s) => ["P1", "P2"].indexOf(s.value_type) !== -1
-					);
-					return stat ? Number(stat.sensor_id) : undefined;
-				};
-			      	const temperatureId = () => {
-					const stat = sensorReadings.find((s) => ["humidity", "temperature"].indexOf(s.value_type) !== -1);
-					return stat ? Number(stat.sensor_id) : undefined;
-				};
-				const network = Number(values.owner);
-				const lat = Number(values.location.latitude);
-				const long = Number(values.location.longitude);
-				const date = new Date(values.last_notify);
-				const P1 = sensorReadings.find((s) => s.value_type === "P1");
-				const P2 = sensorReadings.find((s) => s.value_type === "P2");
-				const data_in = {
-					PM10: P1 ? P1.value : 0,
-					PM25: P2 ? P2.value : 0,
-			      	};
-			      	const data_out = api.officialAQIus(data_in);
-			      	const humidity = sensorReadings.find((s) => s.value_type === "humidity");
-			      	const temperature = sensorReadings.find((s) => s.value_type === "temperature");
-			      	const isIndoor = values.location.indoor;
+				_.chain(json)
+				.map((values) => {
+					if (values.last_notify > timestamp_data) {
+						timestamp_data = values.last_notify;
+					}
+					const sensorReadings = getAllReadings(values.sensors);
+					const id = () => {
+						const stat = sensorReadings.find(
+							(s) => ["P1", "P2"].indexOf(s.value_type) !== -1
+						);
+						return stat ? Number(stat.sensor_id) : undefined;
+					};
+					const temperatureId = () => {
+						const stat = sensorReadings.find((s) => ["humidity", "temperature"].indexOf(s.value_type) !== -1);
+						return stat ? Number(stat.sensor_id) : undefined;
+					};
+					const network = Number(values.owner);
+					const lat = Number(values.location.latitude);
+					const long = Number(values.location.longitude);
+					const date = new Date(values.last_notify);
+					const P1 = sensorReadings.find((s) => s.value_type === "P1");
+					const P2 = sensorReadings.find((s) => s.value_type === "P2");
+					const data_in = {
+						PM10: P1 ? P1.value : 0,
+						PM25: P2 ? P2.value : 0,
+					};
+					const data_out = api.officialAQIus(data_in);
+					const humidity = sensorReadings.find((s) => s.value_type === "humidity");
+					const temperature = sensorReadings.find((s) => s.value_type === "temperature");
+					const isIndoor = values.location.indoor;
 
-			      	const defaultData = {
-					latitude: lat,
-					longitude: long,
-					network: network,
-					date: date.toLocaleDateString(),
-					indoor: isIndoor,
-			      	};
-			      	const airQualityValue = {
-					...defaultData,
-					id: id(),
+					const defaultData = {
+						latitude: lat,
+						longitude: long,
+						network: network,
+						date: date.toLocaleDateString(),
+						indoor: isIndoor,
+					};
+					const airQualityValue = {
+						...defaultData,
+						id: id(),
 
-					data: {
-						PM10: data_in.PM10,
-						PM25: data_in.PM25,
-					},
-			      	};
-			      	const sensorType = {
-					...defaultData,
-					data: {
-				  		Official_AQI_US: data_out.AQI,
-				  		origin: data_out.origin,
-				  		PM10_24h: data_in.PM10,
-				  		PM25_24h: data_in.PM25,
-					},
-					id: temperatureId(),
-			      	};
+						data: {
+							PM10: data_in.PM10,
+							PM25: data_in.PM25,
+						},
+					};
+					const sensorType = {
+						...defaultData,
+						data: {
+							Official_AQI_US: data_out.AQI,
+							origin: data_out.origin,
+							PM10_24h: data_in.PM10,
+							PM25_24h: data_in.PM25,
+						},
+						id: temperatureId(),
+					};
 
-			      	const tempAndHumidity = {
-					...defaultData,
-					id: id(),
-					data: {
-				  		Humidity: humidity ? Math.round(humidity.value) : 0,
-				  		Temperature: temperature ? Math.round(temperature.value) : 0,
-					},
-			      	};
+					const tempAndHumidity = {
+						...defaultData,
+						id: id(),
+						data: {
+							Humidity: humidity ? Math.round(humidity.value) : 0,
+							Temperature: temperature ? Math.round(temperature.value) : 0,
+						},
+					};
 
-			      	airQualityValues.push(airQualityValue);
-			      	sensorTypes.push(sensorType);
-			      	tempAndHumidityValues.push(tempAndHumidity);
-		    	}).value();
-			return Promise.resolve({
-				    airQualityValues,
-				    sensorTypes,
-				    tempAndHumidityValues,
-				    timestamp: timestamp_data,
-			});
-		})
-		.catch(function (error) {
-			// If there is any error you will catch them here
-			throw new Error(`Problems fetching data ${error}`);
-		})
-	    );
-  },
+					airQualityValues.push(airQualityValue);
+					sensorTypes.push(sensorType);
+					tempAndHumidityValues.push(tempAndHumidity);
+				}).value();
+				return Promise.resolve({
+					    airQualityValues,
+					    sensorTypes,
+					    tempAndHumidityValues,
+					    timestamp: timestamp_data,
+				});
+			})
+			.catch(function (error) {
+				// If there is any error you will catch them here
+				throw new Error(`Problems fetching data ${error}`);
+			})
+		);
+ 	},
 };
 
 
