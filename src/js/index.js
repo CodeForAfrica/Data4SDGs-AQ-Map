@@ -449,28 +449,18 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	hexagonheatmap = L.hexbinLayer(scale_options[user_selected_value]).addTo(map);
 
 //	REVOIR ORDRE DANS FONCTION READY
-function retrieveData() {
-  api
-    .getData("http://data4sdgs.sensors.africa/api/nodes")
-    .then(function (result) {
-      hmhexaPM_aktuell = result.airQualityValues;
-      hmhexaPM_AQI = result.sensorTypes;
-      hmhexa_t_h_p = result.tempAndHumidityValues;
+	function retrieveData() {
+		api.getData("http://data4sdgs.sensors.africa/api/nodes").then(function (result) {
+			hmhexaPM_aktuell = result.airQualityValues;
+			hmhexaPM_AQI = result.sensorTypes;
+			hmhexa_t_h_p = result.tempAndHumidityValues;
 
-      if (result.timestamp > timestamp_data)
-        timestamp_data = result.timestamp;
-      ready(1);
-      ready(2);
-      ready(3);
-      {
-        /*api.getData("https://api.sensors.africa/v2/nodes/?format=json", 4).then(function (result) {
-      hmhexa_noise = result.cells;
-      if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
-      ready(4);
-    });*/
-      }
-    });
-}
+			if (result.timestamp > timestamp_data) timestamp_data = result.timestamp;
+			ready(1);
+			ready(2);
+			ready(3);
+		});
+	}
 
 	//retrieve data from api
 	retrieveData();
